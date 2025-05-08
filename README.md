@@ -19,6 +19,7 @@ The project requires the following Python libraries, listed in `requirements.txt
 - `requests`
 - `prophet`
 - `scikit-learn`
+- `python-dotenv`
 
 Install the dependencies with:
 
