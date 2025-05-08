@@ -29,25 +29,23 @@ pip install -r requirements.txt
 
 ## Usage
 
-1. **Prepare the Dataset**: Place the dataset file in the `data/` directory and name it `dataset.xlsx`. Ensure it contains columns for `WHO Region`, `Measurement Year`, and pollutant levels (e.g., PM2.5, PM10, NO2).
-
-2. **Run the Script**: Start the interactive chat by running:
+1. **Run the Script**: Start the interactive chat by running:
 
    ```bash
    python src/main.py
    ```
 
-3. **Interact with the Chat**: Ask questions like:
+2. **Interact with the Chat**: Ask questions like:
 
    - "What will the air quality be like in Europe?"
    - "Analyze African Region."
 
-4. **View Results**: The tool will generate:
+3. **View Results**: The tool will generate:
 
    - Forecast charts saved in the `results/` folder.
    - AI-generated explanations displayed in the chat.
 
-5. **Exit**: Type `exit`, `quit`, or `q` to close the chat.
+4. **Exit**: Type `exit`, `quit`, or `q` to close the chat.
 
 ## Output
 
