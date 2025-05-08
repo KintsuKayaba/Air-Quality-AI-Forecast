@@ -64,5 +64,11 @@ You can customize the following settings in `src/config.py`:
 
 ## Notes
 
-- The project uses the Groq API for AI-generated explanations. Replace the `GROQ_API_KEY` in `src/config.py` with your API key.
+- The project uses the Groq API for AI-generated explanations. To use this project, you must:
+  1. Obtain your API key by registering on the [Groq API website](https://console.groq.com/keys).
+  2. Create a `.env` file in the root directory of the project.
+  3. Add the following line to the `.env` file, replacing `your_api_key` with your actual API key:
+     ```
+     GROQ_API_KEY=your_api_key
+     ```
 - Ensure your dataset contains sufficient data for accurate forecasts.

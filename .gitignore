@@ -1,3 +1,4 @@
 # Ignore the results folder
 results/
 __pycache__/
+.env

@@ -1,7 +1,14 @@
-INPUT_FILE = '../data/Dataset.xlsx'
-OUTPUT_FOLDER = '../results'
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+INPUT_FILE = 'data/Dataset.xlsx'
+OUTPUT_FOLDER = 'results'
 FORECAST_YEARS = 10
-GROQ_API_KEY = "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"
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+if not GROQ_API_KEY:
+    raise ValueError("La chiave API 'GROQ_API_KEY' non è stata trovata. Assicurati che sia attiva.")
 
 POLLUTANTS = {
     "pm2.5": "PM2.5 (μg/m3)",
