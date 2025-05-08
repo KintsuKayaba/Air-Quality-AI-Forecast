@@ -1,18 +1,18 @@
-# MPA-Project
+# Air Quality AI Forecast
 
-MPA-Project è uno strumento basato su Python per analizzare le tendenze dell'inquinamento atmosferico e prevedere i livelli futuri di inquinanti utilizzando dati storici. Utilizza modelli di machine learning (Prophet) e spiegazioni generate da AI per fornire approfondimenti sulla qualità dell'aria in diverse regioni.
+Air Quality AI Forecast is a Python-based tool for analyzing air pollution trends and forecasting future pollutant levels using historical data. It leverages machine learning models (Prophet) and AI-generated explanations to provide insights into air quality across different regions.
 
-## Funzionalità
+## Features
 
-- **Pulizia dei Dati**: Pulisce e pre-elabora automaticamente il dataset per l'analisi.
-- **Previsioni**: Utilizza la libreria Prophet per prevedere i livelli di inquinanti per i prossimi 10 anni.
-- **Visualizzazione**: Genera grafici che mostrano dati storici e previsioni future.
-- **Spiegazioni AI**: Fornisce spiegazioni in linguaggio naturale delle tendenze utilizzando un'API AI.
-- **Chat Interattiva**: Permette agli utenti di interagire con lo strumento tramite un'interfaccia chat.
+- **Data Cleaning**: Automatically cleans and preprocesses the dataset for analysis.
+- **Forecasting**: Uses the Prophet library to predict pollutant levels for the next 10 years.
+- **Visualization**: Generates charts showing historical data and future forecasts.
+- **AI Explanations**: Provides natural language explanations of trends using an AI API.
+- **Interactive Chat**: Allows users to interact with the tool via a chat interface.
 
-## Requisiti
+## Requirements
 
-Il progetto richiede le seguenti librerie Python, elencate in `requirements.txt`:
+The project requires the following Python libraries, listed in `requirements.txt`:
 
 - `pandas`
 - `matplotlib`
@@ -20,49 +20,49 @@ Il progetto richiede le seguenti librerie Python, elencate in `requirements.txt`
 - `prophet`
 - `scikit-learn`
 
-Installa le dipendenze con:
+Install the dependencies with:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Utilizzo
+## Usage
 
-1. **Prepara il Dataset**: Posiziona il file del dataset nella directory del progetto e chiamalo `Dataset.xlsx`. Assicurati che contenga colonne per `WHO Region`, `Measurement Year` e i livelli di inquinanti (es. PM2.5, PM10, NO2).
+1. **Prepare the Dataset**: Place the dataset file in the `data/` directory and name it `dataset.xlsx`. Ensure it contains columns for `WHO Region`, `Measurement Year`, and pollutant levels (e.g., PM2.5, PM10, NO2).
 
-2. **Esegui lo Script**: Avvia la chat interattiva eseguendo:
+2. **Run the Script**: Start the interactive chat by running:
 
    ```bash
-   python progetto.py
+   python src/main.py
    ```
 
-3. **Interagisci con la Chat**: Fai domande come:
+3. **Interact with the Chat**: Ask questions like:
 
-   - "Come sarà l'aria in Europe?"
-   - "Analizza African Region."
+   - "What will the air quality be like in Europe?"
+   - "Analyze African Region."
 
-4. **Visualizza i Risultati**: Lo strumento genererà:
+4. **View Results**: The tool will generate:
 
-   - Grafici delle previsioni salvati nella cartella `Results/`.
-   - Spiegazioni generate dall'AI mostrate nella chat.
+   - Forecast charts saved in the `results/` folder.
+   - AI-generated explanations displayed in the chat.
 
-5. **Esci**: Digita `esci`, `exit` o `quit` per chiudere la chat.
+5. **Exit**: Type `exit`, `quit`, or `q` to close the chat.
 
 ## Output
 
-- **Grafici**: I grafici delle previsioni sono salvati nella cartella `Results/`.
-- **Spiegazioni**: Le spiegazioni generate dall'AI sono mostrate nella chat.
+- **Charts**: Forecast charts are saved in the `results/` folder.
+- **Explanations**: AI-generated explanations are displayed in the chat.
 
-## Configurazione
+## Configuration
 
-Puoi personalizzare le seguenti impostazioni in `progetto.py`:
+You can customize the following settings in `src/config.py`:
 
-- `INPUT_FILE`: Nome del file del dataset di input (predefinito: `Dataset.xlsx`).
-- `OUTPUT_FOLDER`: Cartella in cui salvare i risultati (predefinito: `Results`).
-- `FORECAST_YEARS`: Numero di anni da prevedere (predefinito: 10).
-- `POLLUTANTS`: Dizionario che mappa le chiavi degli inquinanti ai nomi delle colonne nel dataset.
+- `INPUT_FILE`: Name of the input dataset file (default: `data/dataset.xlsx`).
+- `OUTPUT_FOLDER`: Folder to save results (default: `results/`).
+- `FORECAST_YEARS`: Number of years to forecast (default: 10).
+- `POLLUTANTS`: Dictionary mapping pollutant keys to dataset column names.
 
-## Note
+## Notes
 
-- Il progetto utilizza l'API Groq per le spiegazioni generate dall'AI. Sostituisci la chiave `GROQ_API_KEY` in `progetto.py` con la tua chiave API.
-- Assicurati che il tuo dataset contenga dati sufficienti per previsioni accurate.
+- The project uses the Groq API for AI-generated explanations. Replace the `GROQ_API_KEY` in `src/config.py` with your API key.
+- Ensure your dataset contains sufficient data for accurate forecasts.
