@@ -9,6 +9,7 @@ Air Quality AI Forecast is a Python-based tool for analyzing air pollution trend
 - **Visualization**: Generates charts showing historical data and future forecasts.
 - **AI Explanations**: Provides natural language explanations of trends using an AI API.
 - **Interactive Chat**: Allows users to interact with the tool via a chat interface.
+- **Dynamic AI Responses**: The chat interface uses the Groq API to generate conversational and dynamic responses, making the interaction more engaging.
 
 ## Requirements
 
@@ -40,6 +41,8 @@ pip install -r requirements.txt
    - "What will the air quality be like in Europe?"
    - "Analyze African Region."
 
+   The chat interface will provide dynamic AI-generated responses, making the interaction more conversational.
+
 3. **View Results**: The tool will generate:
 
    - Forecast charts saved in the `results/` folder.
@@ -51,6 +54,7 @@ pip install -r requirements.txt
 
 - **Charts**: Forecast charts are saved in the `results/` folder.
 - **Explanations**: AI-generated explanations are displayed in the chat.
+- **Dynamic Responses**: The chat interface uses the Groq API to generate personalized and context-aware responses.
 
 ## Configuration
 
@@ -63,7 +67,7 @@ You can customize the following settings in `src/config.py`:
 
 ## Notes
 
-- The project uses the Groq API for AI-generated explanations. To use this project, you must:
+- The project uses the Groq API for AI-generated explanations and chat responses. To use this project, you must:
   1. Obtain your API key by registering on the [Groq API website](https://console.groq.com/keys).
   2. Create a `.env` file in the root directory of the project.
   3. Add the following line to the `.env` file, replacing `your_api_key` with your actual API key:

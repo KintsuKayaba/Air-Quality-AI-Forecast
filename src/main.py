@@ -1,13 +1,71 @@
 import re
 import difflib
+import random
 from utils.data_utils import load_data, clean_data
-from utils.ai_utils import generate_ai_explanation
+from utils.ai_utils import generate_ai_explanation, generate_ai_chat_response
 from models.forecast import train_and_forecast
 from config.config import INPUT_FILE, ITALIAN_TO_ENGLISH_REGION, POLLUTANTS
 
+def generate_ai_response(message_type, region=None, pollutant=None):
+    """Generate dynamic AI-like responses for the chat."""
+    responses = {
+        "greeting": [
+            "Ciao! Sono qui per aiutarti con le previsioni sulla qualità dell'aria. 😊",
+            "Benvenuto! Scrivimi qualcosa e ti mostrerò le previsioni sull'aria. 🌍",
+        ],
+        "region_found": [
+            f"Ho trovato la regione {region}. Procedo con l'analisi! 🔍",
+            f"Perfetto, analizziamo la regione {region}. 🚀",
+        ],
+        "region_not_found": [
+            "Non riesco a trovare una regione nella tua frase. Prova a essere più specifico. 🤔",
+            "Mi dispiace, non ho capito la regione. Puoi riprovare? 🧐",
+        ],
+        "processing_pollutant": [
+            f"Sto elaborando i dati per {pollutant}. Un attimo... ⏳",
+            f"Analizzo {pollutant}. Ti mostro i risultati tra poco! 📊",
+        ],
+        "goodbye": [
+            "Grazie per avermi usato! Alla prossima! 👋",
+            "È stato un piacere aiutarti. A presto! 😊",
+        ],
+    }
+    return random.choice(responses.get(message_type, [""]))
+
+def process_region(df, region_name):
+    """Process a specific region and generate forecasts and explanations."""
+    df_region = df[df['WHO Region'] == region_name]
+    for key, col_name in POLLUTANTS.items():
+        if col_name in df_region.columns:
+            print(generate_ai_response("processing_pollutant", pollutant=col_name))
+            path, explanation = train_and_forecast(df_region, col_name, col_name, region_name)
+            if path:
+                print(f"[✓] Grafico salvato in: {path}")
+                print(f"\n📄 Spiegazione AI per {col_name}:\n{explanation}\n")
+            else:
+                print(f"[⚠️] Dati insufficienti per {col_name}")
+
+def find_region(query, df):
+    """Find the region based on the user's query."""
+    query_lower = query.lower()
+    # Check for Italian-to-English translation
+    for ita, eng in ITALIAN_TO_ENGLISH_REGION.items():
+        if ita in query_lower:
+            return eng, "traduzione italiana"
+    # Match regions directly or using similar words
+    avaible_regions = df['WHO Region'].unique()
+    words = re.findall(r'\b\w+\b', query_lower)
+    matches = [region for region in avaible_regions if isinstance(region, str) and any(
+        word in region.lower() or region.lower() in word for word in words)]
+    matches = list(dict.fromkeys(matches))  # Remove duplicates
+    if len(matches) == 1:
+        return matches[0], "match diretto"
+    elif len(matches) > 1:
+        print("❗ La tua frase corrisponde a più regioni. Sii più specifico.")
+    return None, None
+
 def chat_loop():
-    print("🤖 Ciao! Scrivimi in linguaggio naturale e ti mostro le previsioni.")
-    print("Puoi chiedere qualcosa come: 'Come sarà l'aria in Europe?' o 'Analizza African Region'.")
+    print(generate_ai_chat_response("greeting"))
 
     df = load_data(INPUT_FILE)
     if df is None:
@@ -19,83 +77,16 @@ def chat_loop():
     while True:
         query = input("🗣️ Tu: ").strip()
         if query.lower() in ["esci", "exit", "quit", "stop"]:
-            print("👋 A presto!")
+            print(generate_ai_chat_response("goodbye"))
             break
-        
-        avaible_regions = df['WHO Region'].unique()
 
-        matched_region = None
-        query_lower = query.lower()
-        region_found = False  # Variabile per evitare duplicati
-
-        # Controlla se la frase contiene nomi italiani e traduce
-        for ita, eng in ITALIAN_TO_ENGLISH_REGION.items():
-            if ita in query_lower and not region_found:
-                matched_region = eng
-                print(f"🔍 Regione trovata (da traduzione italiana): {matched_region}")
-                df_region = df[df['WHO Region'] == matched_region]
-
-                for key, col_name in POLLUTANTS.items():
-                    if col_name in df_region.columns:
-                        print(f"📊 Elaborazione: {col_name}")
-                        path, explanation = train_and_forecast(df_region, col_name, col_name, matched_region)
-                        if path:
-                            print(f"[✓] Grafico salvato in: {path}")
-                            print(f"\n📄 Spiegazione AI per {col_name}:\n{explanation}\n")
-                        else:
-                            print(f"[⚠️] Dati insufficienti per {col_name}")
-                region_found = True  # Impostiamo che la regione è stata trovata tramite traduzione
-                break  # Esci dal ciclo di traduzione per evitare duplicati
-
-        if not region_found:
-            # Estrai solo parole "importanti" (regioni) dalla frase 
-            words = re.findall(r'\b\w+\b', query_lower)
-
-            # Lista di match per le regioni
-            matches = []
-
-            for region in avaible_regions:
-                if not isinstance(region, str):
-                    continue
-                region_lower = region.lower()
-                for word in words:
-                    # Verifica se le parole dell'utente corrispondono (parzialmente o completamente) al nome della regione
-                    if word in region_lower or region_lower in word:
-                        matches.append(region)
-                        break
-                else:
-                    # Se nessuna parola matcha, proviamo con parole simili
-                    # Utilizziamo difflib per trovare parole simili
-                    if difflib.get_close_matches(region_lower, words, n=1, cutoff=0.8):
-                        matches.append(region)
-
-            # Eliminiamo i duplicati (es. stessa regione trovata da più parole)
-            matches = list(dict.fromkeys(matches))
-
-            if len(matches) == 1:
-                matched_region = matches[0]
-            elif len(matches) > 1:
-                print("❗ La tua frase corrisponde a più regioni.")
-                print("Per favore, sii più specifico, puoi visualizzare le previsioni di una regione alla volta.")
-                continue
-
-            if not matched_region:
-                print("❌ Non ho trovato una regione nella tua frase. Riprova.")
-                print(f"Regioni disponibili: {', '.join(avaible_regions)}")
-                continue
-
-            print(f"🔍 Regione trovata: {matched_region}")
-            df_region = df[df['WHO Region'] == matched_region]
-
-            for key, col_name in POLLUTANTS.items():
-                if col_name in df_region.columns:
-                    print(f"📊 Elaborazione: {col_name}")
-                    path, explanation = train_and_forecast(df_region, col_name, col_name, matched_region)
-                    if path:
-                        print(f"[✓] Grafico salvato in: {path}")
-                        print(f"\n📄 Spiegazione AI per {col_name}:\n{explanation}\n")
-                    else:
-                        print(f"[⚠️] Dati insufficienti per {col_name}")
+        matched_region, match_type = find_region(query, df)
+        if matched_region:
+            print(generate_ai_chat_response("region_found", region=matched_region))
+            process_region(df, matched_region)
+        else:
+            print(generate_ai_chat_response("region_not_found"))
+            print(f"Regioni disponibili: {', '.join(df['WHO Region'].unique())}")
 
 if __name__ == "__main__":
     chat_loop()
