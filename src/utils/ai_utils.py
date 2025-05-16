@@ -42,9 +42,15 @@ def generate_ai_explanation(region, pollutant_name, first_year, first_value, las
 def generate_ai_chat_response(message_type, region=None, pollutant=None):
     """Generate AI-like chat responses using the Groq API."""
     prompts = {
-        "greeting": "Saluta l'utente e spiega che puoi fornire previsioni sulla qualità dell'aria.",
+        "greeting": (
+            "Saluta l'utente e spiega che puoi fornire previsioni sulla qualità dell'aria "
+            "solo per le regioni OMS disponibili nel dataset (ad esempio: European Region, African Region, ecc.) "
+            "e solo per gli inquinanti PM2.5, PM10 e NO2. "
+            "Invita l'utente a chiedere informazioni su una di queste regioni."
+        ),
         "region_found": f"Conferma che hai trovato la regione {region} e che stai procedendo con l'analisi.",
         "region_not_found": "Informa l'utente che non hai trovato una regione nella sua frase e suggerisci di riprovare.",
+        "processing_pollutant": f"Sto elaborando i dati per {pollutant}. Attendi qualche secondo mentre preparo la previsione.",
         "goodbye": "Saluta l'utente e ringrazialo per aver usato il servizio.",
     }
     prompt = prompts.get(message_type, "")
