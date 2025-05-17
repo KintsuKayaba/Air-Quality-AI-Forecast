@@ -48,7 +48,7 @@ def chat_loop():
 
     while True:
         query = input("🗣️ Tu: ").strip()
-        if query.lower() in ["esci", "exit", "quit", "stop"]:
+        if generate_ai_chat_response("exit_intent", user_message=query):
             print(generate_ai_chat_response("goodbye"))
             break
 

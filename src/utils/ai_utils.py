@@ -39,7 +39,7 @@ def generate_ai_explanation(region, pollutant_name, first_year, first_value, las
     else:
         return f"[ERRORE AI] {response.text}"
 
-def generate_ai_chat_response(message_type, region=None, pollutant=None):
+def generate_ai_chat_response(message_type, region=None, pollutant=None, user_message=None):
     """Generate AI-like chat responses using the Groq API."""
     prompts = {
         "greeting": (
@@ -52,6 +52,11 @@ def generate_ai_chat_response(message_type, region=None, pollutant=None):
         "region_not_found": "Informa l'utente che non hai trovato una regione nella sua frase e suggerisci di riprovare.",
         "processing_pollutant": f"Sto elaborando i dati per {pollutant}. Attendi qualche secondo mentre preparo la previsione.",
         "goodbye": "Saluta l'utente e ringrazialo per aver usato il servizio.",
+        "exit_intent": (
+            "Rispondi solo con 'SI' o 'NO'. "
+            "La seguente frase dell'utente indica che vuole terminare o uscire dalla conversazione? "
+            f"Frase: \"{user_message}\""
+        ) if user_message else ""
     }
     prompt = prompts.get(message_type, "")
     if not prompt:
@@ -65,13 +70,16 @@ def generate_ai_chat_response(message_type, region=None, pollutant=None):
     data = {
         "model": "llama3-70b-8192",
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.7
+        "temperature": 0 if message_type == "exit_intent" else 0.7
     }
 
     response = requests.post(url, json=data, headers=headers)
     if response.status_code == 200:
         try:
-            return response.json()['choices'][0]['message']['content'].strip()
+            content = response.json()['choices'][0]['message']['content'].strip()
+            if message_type == "exit_intent":
+                return content.lower().startswith("si")
+            return content
         except Exception:
             return "Errore nella generazione della risposta"
     else:
