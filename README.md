@@ -48,7 +48,7 @@ pip install -r requirements.txt
    - Grafici delle previsioni salvati nella cartella `results/`.
    - Spiegazioni generate dall'IA mostrate nella chat.
 
-4. **Esci**: Digita `exit`, `quit`, `esci` o `stop` per chiudere la chat.
+4. **Esci**: Per terminare la sessione della chat, digita qualsiasi comando relativo all'uscita (ad esempio "esci", "exit" o "quit").
 
 ## Output
 
