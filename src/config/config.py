@@ -15,12 +15,3 @@ POLLUTANTS = {
     "pm10": "PM10 (μg/m3)",
     "no2": "NO2 (μg/m3)"
 }
-
-ITALIAN_TO_ENGLISH_REGION = {
-    "africa": "African Region",
-    "europa": "European Region",
-    "america": "Region of the Americas",
-    "pacifico": "Western Pacific Region",
-    "asia": "South East Asia Region",
-    "mediterraneo": "Eastern Mediterranean Region",
-}

@@ -2,12 +2,18 @@ import re
 from utils.data_utils import load_data, clean_data
 from utils.ai_utils import generate_ai_chat_response
 from models.forecast import train_and_forecast
-from config.config import INPUT_FILE, ITALIAN_TO_ENGLISH_REGION, POLLUTANTS
+from config.config import INPUT_FILE, POLLUTANTS
 
 def process_region(df, region_name):
+    
+    if not region_name:
+        print("❗ Non sono riuscito a trovare la regione.")
+        return
+    
     """Process a specific region and generate forecasts and explanations."""
     df_region = df[df['WHO Region'] == region_name]
-    for key, col_name in POLLUTANTS.items():
+    
+    for _, col_name in POLLUTANTS.items():
         if col_name in df_region.columns:
             print(generate_ai_chat_response("processing_pollutant", pollutant=col_name))
             path, explanation = train_and_forecast(df_region, col_name, col_name, region_name)
@@ -20,21 +26,19 @@ def process_region(df, region_name):
 def find_region(query, df):
     """Find the region based on the user's query."""
     query_lower = query.lower()
-    # Check for Italian-to-English translation
-    for ita, eng in ITALIAN_TO_ENGLISH_REGION.items():
-        if ita in query_lower:
-            return eng, "traduzione italiana"
     # Match regions directly or using similar words
     avaible_regions = df['WHO Region'].unique()
-    words = re.findall(r'\b\w+\b', query_lower)
+    words = query_lower.split()
     matches = [region for region in avaible_regions if isinstance(region, str) and any(
         word in region.lower() or region.lower() in word for word in words)]
     matches = list(dict.fromkeys(matches))  # Remove duplicates
+    
     if len(matches) == 1:
-        return matches[0], "match diretto"
+        return matches[0]
     elif len(matches) > 1:
         print("❗ La tua frase corrisponde a più regioni. Sii più specifico.")
-    return None, None
+        
+    return None
 
 def chat_loop():
     print(generate_ai_chat_response("greeting"))

@@ -14,9 +14,7 @@ def load_data(file_path):
         return None
 
 def clean_data(df):
-    print(df.shape)
     cols_needed = ['WHO Region', 'Measurement Year'] + list(POLLUTANTS.values())
     df_clean = df[[col for col in cols_needed if col in df.columns]].dropna(how='all')
     
-    print(df_clean.shape)
     return df_clean

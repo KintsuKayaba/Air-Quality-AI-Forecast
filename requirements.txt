@@ -3,4 +3,5 @@ matplotlib
 requests
 prophet
 scikit-learn
+openpyxl
 python-dotenv
